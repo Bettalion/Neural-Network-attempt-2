@@ -1,5 +1,7 @@
+############################################
 import random
 import math
+from matplotlib import pyplot as plt
 
 #Cleanup
 import os
@@ -15,9 +17,12 @@ class Model:
     #print(random.normalvariate(0,1))
     self.w1,self.w2,self.w3,self.w4,self.b1,self.b2,self.b3 = [random.normalvariate(0,1) for _ in range(7)]
   def readWB(self,file): # file name to read the (trained) weights and biases from a file
-    with open(file,'r') as f:
-      read_data = [float(x) for x in f.read().split('\n')]
-    self.w1,self.w2,self.w3,self.w4,self.b1,self.b2,self.b3 = read_data 
+    try:
+      with open(file,'r') as f:
+        read_data = [float(x) for x in f.read().split('\n')]
+      self.w1,self.w2,self.w3,self.w4,self.b1,self.b2,self.b3 = read_data 
+    except:
+      print('Something Failed while reading, perhaps its verbose mode?')
   def writeWB(self,file,verbose=False): # file name to save the (trained) weights and biases to a file
     with open(file,'w') as f:
       if verbose == False:
@@ -93,6 +98,8 @@ try:
 except:
   pass
 
+def ModelPredict(Model,no):
+  print(f'\nInput:{no}\nPrediction:{Model.predict(no)}')
 def getdata():
   f = open('data.txt','r')
   R_data = f.read().strip().split(',')
@@ -107,24 +114,32 @@ def getdata():
 data = getdata()
 
 Network = Model(data) 
-Network.initWB()
-Network.writeWB('InitialWBs',1)
+
+# Network.writeWB('InitialWBs')
 
 
 for x in range(5000):
   Network.backpropagation()
   # Network.displayWB()
 
-Network.writeWB('TrainedWBs',1)
+# Network.writeWB('TrainedWBs')
 
-def ModelPredict(Model,no):
-  print(f'\nInput:{no}\nPrediction:{Model.predict(no)}')
+# Network.readWB('TrainedWBs')
 
 
-# for x in range(0,100):
-#   no = x/100
-#   ModelPredict(Network,no)
 
+ya = xa = []
+
+for x in range(0,100):
+  no = x/100
+  # ModelPredict(Network,no)
+  xa.append(no)
+  ya.append(Network.predict(no))
+plt.plot(xa,ya)
+plt.show()
+
+
+ ######## ##### ##Testing
 ModelPredict(Network,1)
 ModelPredict(Network,0.75)
 ModelPredict(Network,0.5)
