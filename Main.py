@@ -18,19 +18,19 @@ class Model:
     with open(file,'r') as f:
       read_data = [float(x) for x in f.read().split('\n')]
     self.w1,self.w2,self.w3,self.w4,self.b1,self.b2,self.b3 = read_data 
-  def writeWB(self,file): # file name to save the (trained) weights and biases to a file
+  def writeWB(self,file,verbose=False): # file name to save the (trained) weights and biases to a file
     with open(file,'w') as f:
-      f.write(f'{self.w1}\n{self.w2}\n{self.w3}\n{self.w4}\n{self.b1}\n{self.b2}\n{self.b3}')
+      if verbose == False:
+        f.write(f'{self.w1}\n{self.w2}\n{self.w3}\n{self.w4}\n{self.b1}\n{self.b2}\n{self.b3}')
+      elif verbose == True: 
+        f.write(f'w1:{self.w1}\nw2:{self.w2}\nw3:{self.w3}\nw4:{self.w4}\nb1:{self.b1}\nb2:{self.b2}\nb3:{self.b3}\n\n')
       pass
 
-  def displayWB(self,choice=1):
-    if choice == 0:
-      print(f'w1:{self.w1}\n\nw2:{self.w2}\n\nw3:{self.w3}\n\nw4:{self.w4}\n\nb1:{self.b1}\n\nb2:{self.b2}\n\nb3:{self.b3}\n')
-      with open('WeightsBiases.txt','a') as f:
-        f.write(f'w1:{self.w1}\nw2:{self.w2}\nw3:{self.w3}\nw4:{self.w4}\nb1:{self.b1}\nb2:{self.b2}\nb3:{self.b3}\n\n')
+  def displayWB(self,choice=1): # 0=print, 1=print & write verbose
     if choice == 1:
       print(f'w1:{self.w1}\n\nw2:{self.w2}\n\nw3:{self.w3}\n\nw4:{self.w4}\n\nb1:{self.b1}\n\nb2:{self.b2}\n\nb3:{self.b3}\n')
     else:
+      print(f'w1:{self.w1}\n\nw2:{self.w2}\n\nw3:{self.w3}\n\nw4:{self.w4}\n\nb1:{self.b1}\n\nb2:{self.b2}\n\nb3:{self.b3}\n')
       with open('WeightsBiases.txt','a') as f:
         f.write(f'w1:{self.w1}\nw2:{self.w2}\nw3:{self.w3}\nw4:{self.w4}\nb1:{self.b1}\nb2:{self.b2}\nb3:{self.b3}\n\n')
     
@@ -83,7 +83,6 @@ class Model:
     self.b2 -= db2 * self.learningRate
     self.b3 -= db3 * self.learningRate
     #Repeat
-
     pass 
 
 
@@ -109,29 +108,24 @@ data = getdata()
 
 Network = Model(data) 
 Network.initWB()
-# Network.displayWB()
-Network.writeWB('Mod1.txt')
-Network.readWB('Mod1.txt')
+Network.writeWB('InitialWBs',1)
 
-Network.displayWB()
-# for x in range(5):
-#   Network.backpropagation()
-#   # Network.displayWB()
 
-# def ppp(Model,no):
-#   print(f'\nInput:{no}\nPrediction:{Model.predict(no)}')
+for x in range(5000):
+  Network.backpropagation()
+  # Network.displayWB()
 
-# ppp(Network,0.75)
-# ppp(Network,0.7)
-# ppp(Network,0.55)
-# ppp(Network,0.01)
-# ppp(Network,0)
+Network.writeWB('TrainedWBs',1)
+
+def ModelPredict(Model,no):
+  print(f'\nInput:{no}\nPrediction:{Model.predict(no)}')
+
 
 # for x in range(0,100):
 #   no = x/100
-#   ppp(Network,no)
-# print(Network.activationFunc(10))
-# Network.predict(0)
-# Network.displayWB()
-# print(Network.activationFunc(-8978443))
-# print((1+math.exp(-1))**-1,math.e)
+#   ModelPredict(Network,no)
+
+ModelPredict(Network,1)
+ModelPredict(Network,0.75)
+ModelPredict(Network,0.5)
+ModelPredict(Network,0)
