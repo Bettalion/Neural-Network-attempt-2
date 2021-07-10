@@ -14,6 +14,15 @@ class Model:
   def initWB(self): # add a value from the normal distribution: mean 0,std 1
     #print(random.normalvariate(0,1))
     self.w1,self.w2,self.w3,self.w4,self.b1,self.b2,self.b3 = [random.normalvariate(0,1) for _ in range(7)]
+  def readWB(self,file): # file name to read the (trained) weights and biases from a file
+    with open(file,'r') as f:
+      read_data = f.read()
+      print(read_data)
+      pass
+  def writeWB(self,file): # file name to save the (trained) weights and biases to a file
+    with open(file,'w') as f:
+      f.write(f'{self.w1}\n{self.w2}\n{self.w3}\n{self.w4}\n{self.b1}\n{self.b2}\n{self.b3}\n\n')
+      pass
   def displayWB(self,choice=1):
     if choice == 0:
       print(f'w1:{self.w1}\n\nw2:{self.w2}\n\nw3:{self.w3}\n\nw4:{self.w4}\n\nb1:{self.b1}\n\nb2:{self.b2}\n\nb3:{self.b3}\n')
@@ -104,12 +113,12 @@ Network.initWB()
 
 
 
-for x in range(5000):
-  Network.backpropagation()
-  # Network.displayWB()
+# for x in range(5):
+#   Network.backpropagation()
+#   # Network.displayWB()
 
-def ppp(Model,no):
-  print(f'\nInput:{no}\nPrediction:{Model.predict(no)}')
+# def ppp(Model,no):
+#   print(f'\nInput:{no}\nPrediction:{Model.predict(no)}')
 
 # ppp(Network,0.75)
 # ppp(Network,0.7)
@@ -117,9 +126,9 @@ def ppp(Model,no):
 # ppp(Network,0.01)
 # ppp(Network,0)
 
-for x in range(0,100):
-  no = x/100
-  ppp(Network,no)
+# for x in range(0,100):
+#   no = x/100
+#   ppp(Network,no)
 # print(Network.activationFunc(10))
 # Network.predict(0)
 # Network.displayWB()
