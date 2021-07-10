@@ -22,7 +22,7 @@ class Model:
         read_data = [float(x) for x in f.read().split('\n')]
       self.w1,self.w2,self.w3,self.w4,self.b1,self.b2,self.b3 = read_data 
     except:
-      print('Something Failed while reading, perhaps its verbose mode?')
+      print('Something Failed while reading, perhaps it\'s verbose mode?')
   def writeWB(self,file,verbose=False): # file name to save the (trained) weights and biases to a file
     with open(file,'w') as f:
       if verbose == False:
@@ -31,14 +31,8 @@ class Model:
         f.write(f'w1:{self.w1}\nw2:{self.w2}\nw3:{self.w3}\nw4:{self.w4}\nb1:{self.b1}\nb2:{self.b2}\nb3:{self.b3}\n\n')
       pass
 
-  def displayWB(self,choice=1): # 0=print, 1=print & write verbose
-    if choice == 1:
+  def displayWB(self):
       print(f'w1:{self.w1}\n\nw2:{self.w2}\n\nw3:{self.w3}\n\nw4:{self.w4}\n\nb1:{self.b1}\n\nb2:{self.b2}\n\nb3:{self.b3}\n')
-    else:
-      print(f'w1:{self.w1}\n\nw2:{self.w2}\n\nw3:{self.w3}\n\nw4:{self.w4}\n\nb1:{self.b1}\n\nb2:{self.b2}\n\nb3:{self.b3}\n')
-      with open('WeightsBiases.txt','a') as f:
-        f.write(f'w1:{self.w1}\nw2:{self.w2}\nw3:{self.w3}\nw4:{self.w4}\nb1:{self.b1}\nb2:{self.b2}\nb3:{self.b3}\n\n')
-    
   def activationFunc(self,x):
     return (1+math.exp(-x))**-1 #Sigmoid
     return (math.log((1+math.exp(x)),math.e)) #SoftPlus
@@ -100,16 +94,29 @@ except:
 
 def ModelPredict(Model,no):
   print(f'\nInput:{no}\nPrediction:{Model.predict(no)}')
+# def getdata():
+#   f = open('data.txt','r')
+#   R_data = f.read().strip().split(',')
+#   f.close()
+#   datapoints = int(R_data[0])
+#   data =[[],[]]
+#   for point in range(1,datapoints+1):
+#     data[0].append(float(R_data[point]))
+#     data[1].append(float(R_data[point+datapoints]))
+#   return data
+
+# data = getdata()
 def getdata():
-  f = open('data.txt','r')
-  R_data = f.read().strip().split(',')
-  f.close()
-  datapoints = int(R_data[0])
-  data =[[],[]]
-  for point in range(1,datapoints+1):
-    data[0].append(float(R_data[point]))
-    data[1].append(float(R_data[point+datapoints]))
+  f = open('testdata.txt','r')
+  rdata = f.read().strip().split('\n')
+  data = [[],[]] # Features and targets
+  for datapoint in rdata:
+    f,t = datapoint.split(',') # Features and targets
+    data[0].append(float(f))
+    data[1].append(float(t))
+  print(data)
   return data
+
 
 data = getdata()
 
@@ -135,6 +142,7 @@ for x in range(0,100):
   # ModelPredict(Network,no)
   xa.append(no)
   ya.append(Network.predict(no))
+  print(Network.predict(no))
 plt.plot(xa,ya)
 plt.show()
 
