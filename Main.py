@@ -16,13 +16,13 @@ class Model:
     self.w1,self.w2,self.w3,self.w4,self.b1,self.b2,self.b3 = [random.normalvariate(0,1) for _ in range(7)]
   def readWB(self,file): # file name to read the (trained) weights and biases from a file
     with open(file,'r') as f:
-      read_data = f.read()
-      print(read_data)
-      pass
+      read_data = [float(x) for x in f.read().split('\n')]
+    self.w1,self.w2,self.w3,self.w4,self.b1,self.b2,self.b3 = read_data 
   def writeWB(self,file): # file name to save the (trained) weights and biases to a file
     with open(file,'w') as f:
-      f.write(f'{self.w1}\n{self.w2}\n{self.w3}\n{self.w4}\n{self.b1}\n{self.b2}\n{self.b3}\n\n')
+      f.write(f'{self.w1}\n{self.w2}\n{self.w3}\n{self.w4}\n{self.b1}\n{self.b2}\n{self.b3}')
       pass
+
   def displayWB(self,choice=1):
     if choice == 0:
       print(f'w1:{self.w1}\n\nw2:{self.w2}\n\nw3:{self.w3}\n\nw4:{self.w4}\n\nb1:{self.b1}\n\nb2:{self.b2}\n\nb3:{self.b3}\n')
@@ -61,13 +61,13 @@ class Model:
     dw1 = dw2 = db1 = db2 = dw3 = dw4 = db3 = 0
     for datapoint in range(len(self.data[1])): # len(self.data[1]) : must use index of 1 or 0 as we want the length of the inner array
       # Repeated calculations 
-      dSP = -2*(float(self.data[1][datapoint]) - self.predict(float(self.data[0][datapoint]))) # derivative of ssr in relation to Predicted
+      dSP = -2*(self.data[1][datapoint] - self.predict(self.data[0][datapoint])) # derivative of ssr in relation to Predicted
       dUAF = self.dactivationFunc(self.upperx) # derivative of the activation function evaluated by upper branch
       dLAF = self.dactivationFunc(self.lowerx) # derivative of the activation function evaluated by lower branch
 
-      dw1 += dSP * self.w3 *  dUAF * float(self.data[0][datapoint])
+      dw1 += dSP * self.w3 *  dUAF * self.data[0][datapoint]
       # print(w1)
-      dw2 += dSP * self.w4 *  dLAF * float(self.data[0][datapoint])
+      dw2 += dSP * self.w4 *  dLAF * self.data[0][datapoint]
       db1 += dSP * self.w3 *  dUAF 
       db2 += dSP * self.w4 *  dLAF
       dw3 += dSP * self.activationFunc(self.upperx)
@@ -101,8 +101,8 @@ def getdata():
   datapoints = int(R_data[0])
   data =[[],[]]
   for point in range(1,datapoints+1):
-    data[0].append(R_data[point])
-    data[1].append(R_data[point+datapoints])
+    data[0].append(float(R_data[point]))
+    data[1].append(float(R_data[point+datapoints]))
   return data
 
 data = getdata()
@@ -110,9 +110,10 @@ data = getdata()
 Network = Model(data) 
 Network.initWB()
 # Network.displayWB()
+Network.writeWB('Mod1.txt')
+Network.readWB('Mod1.txt')
 
-
-
+Network.displayWB()
 # for x in range(5):
 #   Network.backpropagation()
 #   # Network.displayWB()
